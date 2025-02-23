@@ -267,7 +267,7 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
-
+}
 
 
 - (void) startAddPaymentPass:(CDVInvokedUrlCommand *)command
