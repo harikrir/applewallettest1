@@ -468,39 +468,4 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
 
 @end
 
-// in this case, it is handling if it found 2 watches (more than 1 remote device) 
-// means if the credit/debit card is exist on more than 1 remote devices, iPad, iWatch etc
 
-// -(void)eligibilityAddingToWallet2:(CDVInvokedUrlCommand*)command{
-//     NSArray* arguments = command.arguments;
-//     NSDictionary* options = [arguments objectAtIndex:0];
-//     NSString* suffix = [options objectForKey:@"primaryAccountSuffix"];
-//     NSMutableDictionary* dictionary = [[NSMutableDictionary alloc] init];
-//     [dictionary setObject:@"False" forKey:@"Wallet"];
-//     [dictionary setObject:@"False" forKey:@"Watch"];
-    
-//     PKPaymentPass *currentPass;
-    
-//     PKPassLibrary *passLib = [[PKPassLibrary alloc] init];
-//     for (PKPaymentPass *pass in [passLib passesOfType:PKPassTypePayment]){
-//         if ([pass.primaryAccountNumberSuffix isEqualToString:suffix]) {
-//             currentPass = pass;
-//             break;
-//         }
-//     }
-    
-//     for (PKPaymentPass *remotePass in [passLib remotePaymentPasses]){
-//         if([remotePass.primaryAccountNumberSuffix isEqualToString:suffix]){
-//             currentPass = remotePass;
-//             break;
-//         }
-//     }
-    
-//     if (currentPass != nil){
-//         [passLib canAddPaymentPassWithPrimaryAccountIdentifier:currentPass.primaryAccountIdentifier];
-//     }
-    
-//     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:dictionary];
-//     [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
-//     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-// }
