@@ -15,7 +15,7 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
 
 @interface AppleWallet()<PKAddPaymentPassViewControllerDelegate>
 
-@synthesize pendingCommand =_pendingCommand;
+  @property (nonatomic, strong)  CDVInvokedUrlCommand* pendingCommand;
 
   @property (nonatomic, assign) BOOL isRequestIssued;
   @property (nonatomic, assign) BOOL isRequestIssuedSuccess;
