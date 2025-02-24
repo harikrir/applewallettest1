@@ -267,8 +267,25 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
+    PKAddPaymentPassRequestConfiguration* config = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:PKEncryptionSchemeECC_V2];
+     config.cardholderName = cardDetails[@"cardholderName"];
+    config.primaryAccountSuffix = cardDetails[@"primaryAccountSuffix"];
+    config.requiresAuthentication = YES; 
     
+    // Create a PKAddPaymentPassViewController
+    self.addPaymentPassModal  = [[PKAddPaymentPassViewController alloc] initWithRequestConfiguration:config delegate:self];
     
+    if (self.addPaymentPassModal) {
+        self.pendingCommand = command; // Store the command for later use
+        [self.viewController presentViewController:self.addPaymentPassModal animated:YES completion:nil];
+    } else {
+		
+		 pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Device does not support adding payment passes"];
+            [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];		
+		
+    }
+
  
     
 }
