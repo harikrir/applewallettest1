@@ -259,9 +259,9 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
 }
 
 
-- (void)addCardToWallet:(CDVInvokedUrlCommand*)command {
-     self.isRequestIssued = false;
-    NSLog(@"LOG start addCardToWallet");
+- (void)addCardToWallet:(CDVInvokedUrlCommand *)command {
+  self.isRequestIssued = false;
+    NSLog(@"LOG start startAddPaymentPass");
     CDVPluginResult* pluginResult;
     NSArray* arguments = command.arguments;
     
@@ -289,10 +289,48 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
             }
         }
 
-  
-    
-    // Create a PKAddPaymentPassViewController
-  
+        PKAddPaymentPassRequestConfiguration* configuration = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:encryptionScheme];
+        
+        // The name of the person the card is issued to
+        configuration.cardholderName = [options objectForKey:@"cardholderName"];
+        
+        // Last 4/5 digits of PAN. The last four or five digits of the PAN. Presented to the user with dots prepended to indicate that it is a suffix.
+        configuration.primaryAccountSuffix = [options objectForKey:@"primaryAccountSuffix"];
+        
+        // A short description of the card.
+        configuration.localizedDescription = [options objectForKey:@"localizedDescription"];
+        
+        // Filters the device and attached devices that already have this card provisioned. No filter is applied if the parameter is omitted
+        configuration.primaryAccountIdentifier = [self getCardFPAN:configuration.primaryAccountSuffix]; //@"V-3018253329239943005544";//@"";
+        
+        
+        // Filters the networks shown in the introduction view to this single network.
+        NSString* paymentNetwork = [options objectForKey:@"paymentNetwork"];
+        if([[paymentNetwork uppercaseString] isEqualToString:@"VISA"]) {
+            configuration.paymentNetwork = PKPaymentNetworkVisa;
+        }
+        if([[paymentNetwork uppercaseString] isEqualToString:@"MASTERCARD"]) {
+            configuration.paymentNetwork = PKPaymentNetworkMasterCard;
+        }
+        
+        // Present view controller
+        self.addPaymentPassModal = [[PKAddPaymentPassViewController alloc] initWithRequestConfiguration:configuration delegate:self];
+        
+        if(!self.addPaymentPassModal) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Can not init PKAddPaymentPassViewController"];
+            [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+            [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+            [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+            self.transactionCallbackId = command.callbackId;
+            [self.viewController presentViewController:self.addPaymentPassModal animated:YES completion:^{
+                [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
+                self.completionCallbackId = command.callbackId;
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:self.transactionCallbackId];
+            }];
+        }
+    }
 
  
     
