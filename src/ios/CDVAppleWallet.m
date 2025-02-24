@@ -289,11 +289,7 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
             }
         }
 
-        PKAddPaymentPassRequestConfiguration* configuration = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:encryptionScheme];
-		
-		 configuration.cardholderName = [options objectForKey:@"cardholderName"];
-		 configuration.primaryAccountSuffix = [options objectForKey:@"primaryAccountSuffix"];  
-         configuration.requiresAuthentication = YES; 
+  
     
     // Create a PKAddPaymentPassViewController
   
