@@ -313,7 +313,7 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
         if([[paymentNetwork uppercaseString] isEqualToString:@"MASTERCARD"]) {
             configuration.paymentNetwork = PKPaymentNetworkMasterCard;
         }
-         configuration.requiresAuthentication = YES; 
+         // configuration.requiresAuthentication = YES; 
          
         // Present view controller
         self.addPaymentPassModal = [[PKAddPaymentPassViewController alloc] initWithRequestConfiguration:configuration delegate:self];
