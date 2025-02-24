@@ -268,22 +268,8 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
         return;
     }
     
-    // Create a PKAddPaymentPassRequestConfiguration
-    PKAddPaymentPassRequestConfiguration *config = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:PKEncryptionSchemeECC_V2];
-    config.cardholderName = cardDetails[@"cardholderName"];
-    config.primaryAccountSuffix = cardDetails[@"primaryAccountSuffix"];
-    config.requiresAuthentication = YES; // Enable external authentication
     
-    // Create a PKAddPaymentPassViewController
-    PKAddPaymentPassViewController *vc = [[PKAddPaymentPassViewController alloc] initWithRequestConfiguration:config delegate:self];
-    
-    if (vc) {
-        _pendingCommand = command; // Store the command for later use
-        [self.viewController presentViewController:vc animated:YES completion:nil];
-    } else {
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Failed to initialize PKAddPaymentPassViewController"];
-        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-    }
+ 
     
 }
 
