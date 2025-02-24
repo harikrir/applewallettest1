@@ -321,14 +321,10 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
             [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         } else {
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
-            [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
-            self.transactionCallbackId = command.callbackId;
-            [self.viewController presentViewController:self.addPaymentPassModal animated:YES completion:^{
-                [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
-                self.completionCallbackId = command.callbackId;
-                [self.commandDelegate sendPluginResult:pluginResult callbackId:self.transactionCallbackId];
-            }];
+         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
+        self.pendingCommand = command; // Store the command for later use
+        [self.viewController presentViewController:self.addPaymentPassModal animated:YES completion:nil];
+
         }
     }
 
