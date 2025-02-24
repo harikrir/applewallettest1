@@ -267,10 +267,10 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
         return;
     }
-    PKAddPaymentPassRequestConfiguration* config = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:PKEncryptionSchemeECC_V2];
-     config.cardholderName = cardDetails[@"cardholderName"];
-    config.primaryAccountSuffix = cardDetails[@"primaryAccountSuffix"];
-    config.requiresAuthentication = YES; 
+    PKAddPaymentPassRequestConfiguration* configuration = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:encryptionScheme];
+     configuration.cardholderName = cardDetails[@"cardholderName"];
+    configuration.primaryAccountSuffix = cardDetails[@"primaryAccountSuffix"];
+    configuration.requiresAuthentication = YES; 
     
     // Create a PKAddPaymentPassViewController
   
