@@ -260,17 +260,40 @@ typedef void (^completedPaymentProcessHandler)(PKAddPaymentPassRequest *request)
 
 
 - (void)addCardToWallet:(CDVInvokedUrlCommand*)command {
-    NSDictionary* cardDetails = [command.arguments objectAtIndex:0];
+     self.isRequestIssued = false;
+    NSLog(@"LOG start addCardToWallet");
+    CDVPluginResult* pluginResult;
+    NSArray* arguments = command.arguments;
     
-    if (!cardDetails) {
-        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Invalid card details"];
+    self.transactionCallbackId = nil;
+    self.completionCallbackId = nil;
+    
+    if ([arguments count] != 1){
+        pluginResult =[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"incorrect number of arguments"];
+        [pluginResult setKeepCallback:[NSNumber numberWithBool:YES]];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-        return;
-    }
-    PKAddPaymentPassRequestConfiguration* configuration = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:encryptionScheme];
-     configuration.cardholderName = cardDetails[@"cardholderName"];
-    configuration.primaryAccountSuffix = cardDetails[@"primaryAccountSuffix"];
-    configuration.requiresAuthentication = YES; 
+    } else {
+        // Options
+        NSDictionary* options = [arguments objectAtIndex:0];
+        
+        // encryption scheme to be used (RSA_V2 or ECC_V2)
+        NSString* scheme = [options objectForKey:@"encryptionScheme"];
+        PKEncryptionScheme encryptionScheme = PKEncryptionSchemeRSA_V2;
+        if (scheme != nil) {
+            if([[scheme uppercaseString] isEqualToString:@"RSA_V2"]) {
+                encryptionScheme = PKEncryptionSchemeRSA_V2;
+            }
+            
+            if([[scheme uppercaseString] isEqualToString:@"ECC_V2"]) {
+                encryptionScheme = PKEncryptionSchemeECC_V2;
+            }
+        }
+
+        PKAddPaymentPassRequestConfiguration* configuration = [[PKAddPaymentPassRequestConfiguration alloc] initWithEncryptionScheme:encryptionScheme];
+		
+		 configuration.cardholderName = [options objectForKey:@"cardholderName"];
+		 configuration.primaryAccountSuffix = [options objectForKey:@"primaryAccountSuffix"];  
+         config.requiresAuthentication = YES; 
     
     // Create a PKAddPaymentPassViewController
   
